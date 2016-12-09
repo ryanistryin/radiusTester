@@ -1,0 +1,45 @@
+Example of proper radius accounting Start packet that freeradius expects
+
+Acct-Status-Type = Start
+NAS-Port-Type = Wireless-802.11
+Calling-Station-Id = "E4:8D:8C:BF:38:52"
+Called-Station-Id = "hs-Bridge-NewHotspot"
+NAS-Port-Id = "Bridge-NewHotspot"
+User-Name = "E4:8D:8C:BF:38:52"
+MS-CHAP-Domain = "newserver"
+NAS-Port = 2150629566
+Acct-Session-Id = "803000be"
+Framed-IP-Address = 10.60.0.2
+Event-Timestamp = "Nov 18 2015 16:43:28 SAST"
+NAS-Identifier = "cs-core"
+Acct-Delay-Time = 0
+NAS-IP-Address = 41.164.32.75
+Acct-Unique-Session-Id = "ff377dc061cf8343"
+
+
+
+Example of proper radius accounting Update packet that freeradius expects
+
+NAS-Port-Type = Wireless-802.11
+Calling-Station-Id = "9C:35:EB:E1:32:4E"
+Called-Station-Id = "hs-bridge-local"
+NAS-Port-Id = "bridge-local"
+User-Name = "toni@4elementsmedia.com"
+NAS-Port = 2155872544
+Acct-Session-Id = "80800120"
+Framed-IP-Address = 192.168.88.245
+Mikrotik-Host-IP = 192.168.88.245
+Event-Timestamp = "Jan 22 1970 21:04:00 SAST"
+Acct-Input-Octets = 4085168
+Acct-Output-Octets = 1879805
+Acct-Input-Gigawords = 0
+Acct-Output-Gigawords = 0
+Acct-Input-Packets = 4794
+Acct-Output-Packets = 3801
+Acct-Session-Time = 180
+NAS-Identifier = "cs-blackbetty-ap"
+Acct-Delay-Time = 0
+NAS-IP-Address = 172.40.2.2
+Acct-Unique-Session-Id = "f0f8c7e678c72a4b"
+Tmp-IP-Address-0 = 41.164.32.74
+Timestamp = 1460098024

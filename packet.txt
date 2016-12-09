@@ -1,0 +1,2 @@
+User-Name=somebody
+NAS-IP-Address=10.0.0.1
