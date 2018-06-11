@@ -14,7 +14,7 @@ client.bind(49003);
 
 
 
-
+var radiusServer = '172.16.1.10'
 
 
 var uniqueMacAddress = [];
@@ -31,12 +31,12 @@ var nas = {
 
 
 }
-var secret = 'testing123'; //radius secret
+var secret = 'c33kr1t'; //radius secret
 //some config options
 var config = {
-	'nasSpeed' : "409600", //this is the "speed" at which the NAS has allocated to it. It helps get more *realistic* results for data consumed. i.e. a user cannot have download 1000MB in 60 seconds (the interim-update value) if it was 4mbps line...
+	'nasSpeed' : "40960", //this is the "speed" at which the NAS has allocated to it. It helps get more *realistic* results for data consumed. i.e. a user cannot have download 1000MB in 60 seconds (the interim-update value) if it was 4mbps line...
 	'acctSessionID' : 10000000, //because im useless & lazy and this is easy. we will increment this per acct session
-	'acctInterimUpdate' : 10000,//the acct-interim-update equivilant
+	'acctInterimUpdate' :60,//the acct-interim-update equivilant
 }
 
 
@@ -100,7 +100,9 @@ function doAcctUpdate(i) {
 					['Framed-IP-Address',clients[i].ipAddress], //clients IP address must be unique
 					['NAS-Identifier',nas.identifier],
 					['Acct-Input-Octets',clients[i].acctInputOctets],
+					['Acct-Input-Gigawords',0],
 					['Acct-Output-Octets',clients[i].acctOutputOctets],
+					['Acct-Output-Gigawords',0],
 					['Acct-Session-Time',clients[i].acctSessionTime],
 
 				]
@@ -112,7 +114,7 @@ function doAcctUpdate(i) {
 			raw_packet: encoded,
 			secret: packet.secret
 		};
-		client.send(encoded, 0, encoded.length, 1813, "localhost");
+		client.send(encoded, 0, encoded.length, 1813, radiusServer);
 
 	}, config.acctInterimUpdate);
 
@@ -144,6 +146,8 @@ function doAcctStop(i) {
 					['NAS-Identifier',nas.identifier],
 					['Acct-Input-Octets',clients[i].acctInputOctets],
 					['Acct-Output-Octets',clients[i].acctOutputOctets],
+					['Acct-Input-Gigawords',0],
+					['Acct-Output-Gigawords',0],
 					['Acct-Session-Time',clients[i].acctSessionTime],
 
 				]
@@ -159,7 +163,7 @@ function doAcctStop(i) {
 
 		//beware, if we get a stop request before accounting has started. the entire app will crash
 		// console.log('crash now..')
-		client.send(encoded, 0, encoded.length, 1813, "localhost");
+		client.send(encoded, 0, encoded.length, 1813, radiusServer);
 		clients[i].acctDone = true;
 		//do accounting update
 			clearInterval(clients[i].timerid)
@@ -201,6 +205,8 @@ function doAcctStart(i) {
 					['NAS-Identifier',nas.identifier],
 					['Acct-Output-Octets',clients[i].acctOutputOctets],
 					['Acct-Input-Octets',clients[i].acctInputOctets],
+					['Acct-Input-Gigawords',0],
+					['Acct-Output-Gigawords',0],
 					['Acct-Session-Time',clients[i].acctSessionTime],
 				]
 			};
@@ -212,7 +218,7 @@ function doAcctStart(i) {
 			raw_packet: encoded,
 			secret: packet.secret
 		};
-		client.send(encoded, 0, encoded.length, 1813, "localhost");
+		client.send(encoded, 0, encoded.length, 1813, radiusServer);
 
 };
 
@@ -226,7 +232,7 @@ function doRad(i) {
 
 			//do radius authentication
 			console.log('doing auth for client ' + i + ' username: ' + clients[i].username);
-
+			
 				//create a properly formulated packet
 				var packet = {
 					code: "Access-Request",
@@ -245,7 +251,7 @@ function doRad(i) {
 				raw_packet: encoded,
 				secret: packet.secret
 			};
-			client.send(encoded, 0, encoded.length, 1812, "localhost");
+			client.send(encoded, 0, encoded.length, 1812, radiusServer);
 
 	}, t)
 
@@ -258,7 +264,7 @@ function getStarted() {
         var c = 0;
 
         console.log('Starting APP')
-        requestify.get('http://127.0.0.1:1337/Services/?limit=200')
+        requestify.get('http://172.16.1.10:1337/Services/?limit=254')
         .then(function(response) {
             // Get the response body (JSON parsed or jQuery object for XMLs)
             // response.getBody();
